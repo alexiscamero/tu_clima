@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html class="no-js" lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.svg" />
+    <title>Consulta del Clima</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@7.3.0/ol.css">
+
+</head>
+
+<body>
+
+    <header class="header navbar-area">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <div class="nav-inner">
+                        <nav class="navbar navbar-expand-lg">
+                            <a class="navbar-brand" href="#">
+                                <img src="imagen/logo1.png" alt="Logo">
+                            </a>
+                        </nav>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <section class="hero-area">
+
+        <div class="container id=arriba">
+            <h1>Consulta del Clima</h1><br><br><br><br>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="provinciaSelect">Provincia:</label>
+                        <select id="provinciaSelect" class="form-control">
+                            <option value="">Selecciona una provincia</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="municipioSelect">Municipio:</label>
+                        <select id="municipioSelect" class="form-control">
+                            <option value="">Selecciona un municipio</option>
+                        </select>
+                    </div>
+                </div>
+            </div><br>
+        </div>
+
+        <div class="container"> <!-- Contenedor para el mapa -->
+            <div id="map"></div>
+        </div>
+
+
+        <div class="container mt-4" id="containerClima">
+            <div class="row" id="climaContainer">
+                <div class="col-md-12 mb-3">
+                    <div class="row">
+                        <div class="col-sm-3 grafica" id="grafica0"></div>
+                        <div class="col-sm-3 iconos" id="iconos0">
+
+                            <img src="imagen/celcius.png" style="width: 2rem;"><br><br>
+                            <img src="imagen/humedad.png" style="width: 2rem;"><br><br>
+                            <img src="imagen/uv.png" style="width: 2rem;"><br><br>
+                            <img src="imagen/viento.png" style="width: 2rem;">
+                        </div>
+                        <div class="col-sm-6 climaInfo" id="climaInfo0"></div>
+                    </div>
+                </div>
+            </div><br>
+            <div class="row" id="climaContainer">
+                <div class="col-md-12 mb-3">
+                    <div class="row">
+                        <div class="col-sm-3 " id="grafica1"></div>
+                        <div class="col-sm-3 iconos" id="iconos1">
+
+                            <img src="imagen/celcius.png" style="width: 2rem;"><br><br>
+                            <img src="imagen/humedad.png" style="width: 2rem;"><br><br>
+                            <img src="imagen/uv.png" style="width: 2rem;"><br><br>
+                            <img src="imagen/viento.png" style="width: 2rem;">
+                        </div>
+                        <div class="col-sm-6 climaInfo" id="climaInfo1"></div>
+                    </div>
+                </div>
+            </div><br>
+            <div class="row" id="climaContainer">
+                <div class="col-md-12 mb-3">
+                    <div class="row">
+                        <div class="col-sm-3" id="grafica2"></div>
+                        <div class="col-sm-3 iconos" id="iconos2">
+
+                            <img src="imagen/celcius.png" style="width: 2rem;"><br><br>
+                            <img src="imagen/humedad.png" style="width: 2rem;"><br><br>
+                            <img src="imagen/uv.png" style="width: 2rem;"><br><br>
+                            <img src="imagen/viento.png" style="width: 2rem;">
+                        </div>
+                        <div class="col-sm-6 climaInfo" id="climaInfo2"></div>
+                    </div>
+                </div>
+            </div><br>
+            <div class="row" id="climaContainer">
+                <div class="col-md-12 mb-3">
+                    <div class="row">
+                        <div class="col-sm-3" id="grafica3"></div>
+                        <div class="col-sm-3 iconos" id="iconos3">
+
+                            <img src="imagen/celcius.png" style="width: 2rem;"><br><br>
+                            <img src="imagen/humedad.png" style="width: 2rem;"><br><br>
+                            <img src="imagen/uv.png" style="width: 2rem;"><br><br>
+                            <img src="imagen/viento.png" style="width: 2rem;">
+                        </div>
+                        <div class="col-sm-6 climaInfo" id="climaInfo3"></div>
+                    </div>
+                </div>
+            </div><br>
+
+
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/ol@7.3.0/dist/ol.js"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Variables globales para almacenar el código de provincia seleccionado
+                let codProvinciaSeleccionada;
+                let municipioSeleccionado;
+                // Variables globales para almacenar el código de provincia y municipio seleccionados
+                let municipiosInfo = {}; // Objeto para almacenar los datos de los municipios
+                // Variables globales para almacenar la capa de marcadores
+                let vectorLayer;
+
+                 // Inicializar el mapa
+                 const map = new ol.Map({
+                    target: 'map', // ID del contenedor del mapa
+                    layers: [
+                        // Capa de mosaico de OpenStreetMap
+                        new ol.layer.Tile({
+                            source: new ol.source.OSM(),
+                        }),
+                    ],
+                    // Centrar el mapa en Madrid, España, con un nivel de zoom de 6
+                    view: new ol.View({
+                        center: ol.proj.fromLonLat([-3.7026, 40.4165]),
+                        zoom: 5,
+                    }),
+                });
+
+
+                // Crear la capa de vectores (marcadores)
+                function crearCapaVectores() {
+                    vectorLayer = new ol.layer.Vector({
+                        source: new ol.source.Vector(),
+                    });
+
+                    // Agregar la capa de vectores al mapa
+                    map.addLayer(vectorLayer);
+                }
+
+
+                crearCapaVectores();
+
+                // Función para agregar un marcador en las coordenadas especificadas
+                function agregarMarcador(lat, lng) {
+                    // Crear un marcador (feature) con las coordenadas
+                    const marcador = new ol.Feature({
+                        geometry: new ol.geom.Point(ol.proj.fromLonLat([lng, lat]))
+                    });
+
+                    // Configurar el estilo del marcador (opcional)
+                    marcador.setStyle(new ol.style.Style({
+                        image: new ol.style.Icon({
+                            src: 'imagen/marcador.png', // Ruta al icono del marcador
+                            scale: 0.04 // Ajustar el tamaño del icono si es necesario
+                        })
+                    }));
+
+                    // Eliminar cualquier marcador anterior
+                    vectorLayer.getSource().clear();
+
+                    // Agregar el nuevo marcador a la capa de vectores
+                    vectorLayer.getSource().addFeature(marcador);
+                }
+
+
+
+
+                // Función para cargar las provincias desde la API
+                function cargarProvincias() {
+                    fetch('https://www.el-tiempo.net/api/json/v2/provincias')
+                        .then(response => response.json())
+                        .then(data => {
+                            const provinciasSelect = document.getElementById('provinciaSelect');
+                            data.provincias.forEach(provincia => {
+                                const option = document.createElement('option');
+                                option.value = provincia.CODPROV;
+                                option.text = provincia.NOMBRE_PROVINCIA;
+                                provinciasSelect.appendChild(option);
+
+
+
+
+                            });
+                        });
+                }
+
+                // Función para centrar el mapa en un municipio seleccionado
+                function centrarEnMunicipio() {
+                    const municipioSelect = document.getElementById('municipioSelect');
+                    const municipioSeleccionado = municipioSelect.value;
+
+                    if (municipioSeleccionado && municipios[municipioSeleccionado]) {
+                        const coords = municipios[municipioSeleccionado];
+
+                        // Centrar el mapa en las coordenadas del municipio seleccionado
+                        map.getView().setCenter(ol.proj.fromLonLat([coords.lng, coords.lat]));
+                        map.getView().setZoom(10); // Ajustar el nivel de zoom según sea necesario
+                    }
+                }
+
+                // Función para cargar los municipios de una provincia seleccionada
+                function cargarMunicipios(codProvincia) {
+                    fetch(`https://www.el-tiempo.net/api/json/v2/provincias/${codProvincia}/municipios`)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Municipios cargados:", data);
+                            const municipiosSelect = document.getElementById('municipioSelect');
+                            municipiosSelect.innerHTML = '<option value="">Selecciona un municipio</option>';
+                            data.municipios.forEach(municipio => {
+                                const option = document.createElement('option');
+                                option.value = municipio.CODIGOINE;
+                                option.text = municipio.NOMBRE;
+                                municipiosSelect.appendChild(option);
+
+                                // Almacenar la información del municipio en la variable global
+                                municipiosInfo[municipio.CODIGOINE] = {
+                                    nombre: municipio.NOMBRE,
+                                    lat: municipio.LATITUD_ETRS89_REGCAN95,
+                                    lng: municipio.LONGITUD_ETRS89_REGCAN95
+
+
+                                };
+                                //mostrar en consola la lat y lng
+                                console.log("Latitud:", municipio.LATITUD_ETRS89_REGCAN95, "Longitud:", municipio.LONGITUD_ETRS89_REGCAN95)
+
+                                //mostrar en consola el municipio
+                                console.log("Municipio cargado:", municipio);
+
+                            });
+                        });
+                }
+
+                // Función para obtener el clima de un municipio seleccionado
+                function obtenerClima(idMunicipio) {
+                    const idMunicipioCorto = idMunicipio.substring(0, 5);
+                    const url = `https://www.el-tiempo.net/api/json/v1/provincias/${codProvinciaSeleccionada}/municipios/${idMunicipioCorto}/weather`;
+                    const proxyUrl = 'https://corsproxy.io/?'; // Reemplaza 'https://cors-anywhere.herokuapp.com/     https://corsproxy.io/?' con la URL del proxy que maneje CORS
+
+                    fetch(proxyUrl + url)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Respuesta de red no fue ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log("Datos del clima recibidos:", data);
+                            mostrarClima(data);
+                        })
+                        .catch(error => {
+                            console.error('Error al obtener el clima:', error);
+                            // Puedes actualizar el UI para mostrar un mensaje de error
+                            document.getElementById('climaInfo').innerText = 'Error al cargar los datos del clima.';
+                        });
+                }
+
+
+                // Función para mostrar la información del clima en pantalla
+                function mostrarClima(data) {
+                    data.prediccion.dia.forEach((dia, index) => {
+                        console.log(index)
+                        if (index > 7) return; // Aseguramos que solo se manejan los días 0 a 6
+
+                        const climaInfo = document.getElementById(`climaInfo${index}`);
+                        climaInfo.innerHTML = `
+                    <p><strong>Temperatura Máxima:</strong> ${dia.temperatura.maxima} °C</p>
+                    <p><strong>Temperatura Mínima:</strong> ${dia.temperatura.minima} °C</p><br>
+                    <p><strong>Humedad:</strong> ${dia.humedad_relativa.minima} %</p> <br>
+                    <p><strong>UV:</strong> ${dia.uv_max}</p><br>
+                    <p><strong>Dirección del Viento:</strong> ${dia.viento[2].direccion}</p>
+                    <p><strong>Velocidad del Viento:</strong> ${dia.viento[2].velocidad} Km/h</p>`;
+
+                        const grafica = document.getElementById(`grafica${index}`);
+                        grafica.innerHTML = `<p><strong>Fecha:</strong> ${dia["@attributes"].fecha}</p>`;
+
+                        const estadoCielo = parseInt(dia.estado_cielo[0]);
+                        let imagePath = "imagen/soleado.png"; // Imagen por defecto
+                        if (estadoCielo >= 20 && estadoCielo < 40) {
+                            imagePath = "imagen/parcial_nublado.png";
+                        } else if (estadoCielo >= 40 && estadoCielo < 60) {
+                            imagePath = "imagen/nublado.png";
+                        } else if (estadoCielo >= 60 && estadoCielo < 80) {
+                            imagePath = "imagen/muy_nublado.png";
+                        } else if (estadoCielo >= 80) {
+                            imagePath = "imagen/lluvioso.png";
+                        }
+                        grafica.innerHTML += `<img src="${imagePath}" style="width: 15rem;">`;
+                    });
+                }
+
+
+                // Event listener para cargar los municipios cuando se selecciona una provincia
+                document.getElementById('provinciaSelect').addEventListener('change', function () {
+                    codProvinciaSeleccionada = this.value;
+                    if (codProvinciaSeleccionada) {
+                        cargarMunicipios(codProvinciaSeleccionada);
+                    } else {
+                        document.getElementById('municipioSelect').innerHTML = '<option value="">Selecciona un municipio</option>';
+                    }
+                });
+
+                // Event listener para obtener el clima cuando se selecciona un municipio
+                document.getElementById('municipioSelect').addEventListener('change', function () {
+                    municipioSeleccionado = this.value;
+                    if (codProvinciaSeleccionada && municipioSeleccionado) {
+                        obtenerClima(municipioSeleccionado);
+                    } else {
+                        console.error('Debe seleccionar una provincia y un municipio');
+                    }
+                });
+
+
+                // Evento para centrar el mapa en el municipio seleccionado
+                document.getElementById('municipioSelect').addEventListener('change', function () {
+                    municipioSeleccionado = this.value;
+                    if (municipioSeleccionado && municipiosInfo[municipioSeleccionado]) {
+                        const municipioData = municipiosInfo[municipioSeleccionado];
+                        // Centrar el mapa en las coordenadas del municipio seleccionado
+                        map.getView().setCenter(ol.proj.fromLonLat([municipioData.lng, municipioData.lat]));
+                        map.getView().setZoom(10); // Ajustar el nivel de zoom según sea necesario
+
+                        // Agregar un marcador en las coordenadas del municipio seleccionado
+            agregarMarcador(municipioData.lat, municipioData.lng);
+
+                    }
+                });
+
+
+                // Cargar las provincias al cargar la página
+                cargarProvincias();
+
+
+                
+                
+               
+
+            });
+
+        </script>
+
+
+
+
+
+        <div class="main__circle"></div>
+        <div class="main__circle2"></div>
+        <div class="main__circle3"></div>
+        <div class="main__circle4"></div>
+
+    </section>
+
+    <footer class="footer section">
+
+    </footer>
+
+
+    <!-- ========================= scroll-top ========================= -->
+    <a href="#" class="scroll-top">
+        <img src="imagen/arriba.png" alt="arriba" style="width: 2rem;">
+    </a>
+
+    <!-- ========================= JS here ========================= -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/tiny-slider.js"></script>
+    <script src="assets/js/glightbox.min.js"></script>
+    <script src="assets/js/count-up.min.js"></script>
+    <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

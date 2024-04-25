@@ -1,0 +1,67 @@
+body {
+    padding: 50px;
+}
+
+#climaContainer {
+    background: #7ec0ee; /* Color de fondo de ejemplo */
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.iconos {
+    text-align: center;
+    margin-top: 2rem !important;
+}
+
+.climaInfo {
+    margin-top: 2rem !important;
+}
+
+#containerClima {
+    width: 60%;
+    margin: auto; /* Centrar el contenedor */
+    background-color: white;
+}
+
+#arriba, #containerClima {
+    position: relative; /* O 'absolute' según tu diseño */
+    z-index: 10; /* Un valor más alto para que esté encima */
+}
+
+h1 {
+    text-align: center;
+}
+
+
+#map {
+    padding-left: 3rem;
+    height: 20rem;
+    width: 95%;
+    z-index: 1;
+}
+
+/* Media queries para diferentes tamaños de pantalla */
+@media (max-width: 768px) {
+    body {
+        padding: 20px; /* Menos padding en dispositivos pequeños */
+    }
+
+    #containerClima {
+        width: 100%; /* Aprovecha todo el ancho en dispositivos pequeños */
+    }
+
+    .climaInfo {
+        margin-top: 1rem; /* Menor margen superior en dispositivos pequeños */
+    }
+
+    .iconos img {
+        width: 1.5rem; /* Imágenes más pequeñas para ajustarse mejor */
+    }
+}
+
+@media (max-width: 1200px) {
+    .iconos img {
+        display: none;
+    }
+}
