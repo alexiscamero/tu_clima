@@ -380,7 +380,7 @@
                         map.getView().setZoom(10); // Ajustar el nivel de zoom según sea necesario
 
                         // Agregar un marcador en las coordenadas del municipio seleccionado
-                        const tooltipContent = `Nombre: ${municipioData.nombre}\nSuperficie: ${municipioData.superficie} km²\nPoblación: ${municipioData.poblacion} habitantes`;
+                        const tooltipContent = `Nombre: ${municipioData.nombre}\nSuperficie: ${municipioData.superficie} m²\nPoblación: ${municipioData.poblacion} habitantes`;
                         agregarMarcador(municipioData.lat, municipioData.lng, tooltipContent);
                     }
                 });
