@@ -41,7 +41,7 @@
     <section class="hero-area">
 
         <div class="container id=arriba">
-            <h1>Consulta del Clima???</h1><br><br><br><br>
+            <h1>Consulta del Clima</h1><br><br><br><br>
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -148,8 +148,8 @@
                 // Variables globales para almacenar la capa de marcadores
                 let vectorLayer;
 
-                 // Inicializar el mapa
-                 const map = new ol.Map({
+                // Inicializar el mapa
+                const map = new ol.Map({
                     target: 'map', // ID del contenedor del mapa
                     layers: [
                         // Capa de mosaico de OpenStreetMap
@@ -179,7 +179,7 @@
                 crearCapaVectores();
 
                 // Función para agregar un marcador en las coordenadas especificadas
-                function agregarMarcador(lat, lng) {
+                function agregarMarcador(lat, lng, tooltipContent) {
                     // Crear un marcador (feature) con las coordenadas
                     const marcador = new ol.Feature({
                         geometry: new ol.geom.Point(ol.proj.fromLonLat([lng, lat]))
@@ -190,6 +190,22 @@
                         image: new ol.style.Icon({
                             src: 'imagen/marcador.png', // Ruta al icono del marcador
                             scale: 0.04 // Ajustar el tamaño del icono si es necesario
+                        }),
+                        text: new ol.style.Text({
+                            text: tooltipContent, // Añadir contenido de tooltip
+                            scale: 1.5,
+                            overflow: true,
+                            fill: new ol.style.Fill({
+                                color: '#000000'
+                            }),
+                            stroke: new ol.style.Stroke({
+                                color: '#ffffff',
+                                width: 3
+                            }),
+                            backgroundFill: new ol.style.Fill({
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }),
+                            offsetY: -60 // Ajustar la posición de la tooltip sobre el marcador
                         })
                     }));
 
@@ -199,7 +215,6 @@
                     // Agregar el nuevo marcador a la capa de vectores
                     vectorLayer.getSource().addFeature(marcador);
                 }
-
 
 
 
@@ -254,7 +269,11 @@
                                 municipiosInfo[municipio.CODIGOINE] = {
                                     nombre: municipio.NOMBRE,
                                     lat: municipio.LATITUD_ETRS89_REGCAN95,
-                                    lng: municipio.LONGITUD_ETRS89_REGCAN95
+                                    lng: municipio.LONGITUD_ETRS89_REGCAN95,
+                                    nombre: municipio.NOMBRE,
+                                    superficie: municipio.SUPERFICIE,
+                                    poblacion: municipio.POBLACION_CAPITAL
+
 
 
                                 };
@@ -263,6 +282,9 @@
 
                                 //mostrar en consola el municipio
                                 console.log("Municipio cargado:", municipio);
+
+                                //mostrar en consola información del municipio cargado
+                                console.log("Información del municipio cargado:", municipiosInfo[municipio.CODIGOINE]);
 
                             });
                         });
@@ -358,19 +380,20 @@
                         map.getView().setZoom(10); // Ajustar el nivel de zoom según sea necesario
 
                         // Agregar un marcador en las coordenadas del municipio seleccionado
-            agregarMarcador(municipioData.lat, municipioData.lng);
-
+                        const tooltipContent = `Nombre: ${municipioData.nombre}\nSuperficie: ${municipioData.superficie} km²\nPoblación: ${municipioData.poblacion} habitantes`;
+                        agregarMarcador(municipioData.lat, municipioData.lng, tooltipContent);
                     }
                 });
+
 
 
                 // Cargar las provincias al cargar la página
                 cargarProvincias();
 
 
-                
-                
-               
+
+
+
 
             });
 
